@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Number Game</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .game-card {
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-result {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .attempts,
+        .score {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card game-card text-center p-4">
+        <h2 class="mb-3">🎮 Guess The Number</h2>
+        <p class="text-muted">Find the hidden number between <strong>1 and 100</strong></p>
+
+        <input type="number" id="userInput" class="form-control mb-3" placeholder="Enter your guess" min="1" max="100">
+
+        <button class="btn btn-primary btn-block mb-2" onclick="checkGuess()">Check Guess</button>
+        <button class="btn btn-secondary btn-block" onclick="resetGame()">🔄 New Game</button>
+
+        <p id="gameResult" class="game-result mt-3"></p>
+        <p class="attempts">❤️ Attempts Left: <span id="attemptsLeft">7</span></p>
+        <p class="score">🏆 Score: <span id="score">0</span></p>
+    </div>
+
+    <script>
+        let randomNumber;
+        let attempts;
+        let score = 0;
+
+        function startGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 7;
+            document.getElementById("attemptsLeft").textContent = attempts;
+            document.getElementById("gameResult").textContent = "";
+            document.getElementById("userInput").value = "";
+        }
+
+        function checkGuess() {
+            const userValue = parseInt(document.getElementById("userInput").value);
+            const result = document.getElementById("gameResult");
+
+            if (isNaN(userValue) || userValue < 1 || userValue > 100) {
+                result.textContent = "⚠️ Please enter a valid number between 1 and 100!";
+                result.style.color = "red";
+                return;
+            }
+
+            if (userValue === randomNumber) {
+                result.textContent = "🎉 Correct! You guessed the number!";
+                result.style.color = "green";
+                score++;
+                document.getElementById("score").textContent = score;
+            } else {
+                attempts--;
+                document.getElementById("attemptsLeft").textContent = attempts;
+
+                if (attempts === 0) {
+                    result.textContent = `💀 Game Over! The number was ${randomNumber}`;
+                    result.style.color = "darkred";
+                } else if (userValue < randomNumber) {
+                    result.textContent = userValue + " is too low! 📉";
+                    result.style.color = "blue";
+                } else {
+                    result.textContent = userValue + " is too high! 📈";
+                    result.style.color = "orange";
+                }
+            }
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        // Start game initially
+        startGame();
+    </script>
+
+</body>
+
+</html>
